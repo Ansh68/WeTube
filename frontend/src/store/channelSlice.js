@@ -6,7 +6,7 @@ const initialState = {
     userPlaylist: [],
     userHistory: [],
     userSubscribed: [],
-    
+
 }
 
 
@@ -24,7 +24,15 @@ const ChannelSlice = createSlice({
             state.userPlaylist = action.payload;
         },
         setUserHistory: (state, action) => {
-            state.userHistory = action.payload;
+            
+            const seen = new Set(state.userHistory.map(v => v._id));
+
+            action.payload.forEach(v => {
+                if (!seen.has(v._id)) {
+                    state.userHistory.push(v);
+                    seen.add(v._id);
+                }
+            });
         },
         setUserSubscribed: (state, action) => {
             state.userSubscribed = action.payload

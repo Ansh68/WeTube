@@ -6,6 +6,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Video from './pages/Video'
 import ChannelPage from './pages/ChannelPage'
+import History from './pages/History'
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
         <Route path='/Login' element= {<Login/>} ></Route>
         <Route path='/watchpage/:videoId' element = {<Video/>} ></Route>
         <Route path='/channel/:username' element= {<ChannelPage />}> </Route>
+        <Route path='/history' element={<History/>} ></Route>
       </Routes>
     </BrowserRouter>
 
