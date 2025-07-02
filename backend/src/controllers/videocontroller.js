@@ -102,7 +102,6 @@ const getAllVideos = AsyncHandler(async (req, res) => {
 
 })
 
-
 const publishVideo = AsyncHandler(async (req, res) => {
     const { title, description } = req.body;
 
@@ -117,7 +116,7 @@ const publishVideo = AsyncHandler(async (req, res) => {
 
     }
 
-    const videoLocalPath = req.files?.videos[0]?.path
+    const videoLocalPath = req.files?.videoFile[0]?.path
 
     if (!videoLocalPath) {
         throw new ApiError(400, "Please provide video file");

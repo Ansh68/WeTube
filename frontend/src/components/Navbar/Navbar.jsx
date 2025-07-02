@@ -5,6 +5,7 @@ import Search from './Search';
 import axios from 'axios';
 import { logout } from '../../store/authSlice';
 import { User, LogOut, Settings } from 'lucide-react';
+import PopUp from '../Dashboard/PopUp';
 
 function Navbar() {
   const user = useSelector((state) => state.auth.data.user);
@@ -51,6 +52,10 @@ function Navbar() {
         <Link to="/" className="text-white font-bold text-xl">MyApp</Link>
 
         <Search />
+
+        <div>
+          <PopUp/>
+        </div>
 
         <div className="flex items-center gap-4" ref={menuref}>
           {!isAuthenticated ? (

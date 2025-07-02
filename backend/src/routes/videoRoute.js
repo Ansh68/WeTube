@@ -15,7 +15,7 @@ videoRoute.get("/getAllVideos", VerifyJWT, getAllVideos);
 videoRoute.route("/publish").post(VerifyJWT, upload.fields(
     [
         {
-            name: "videos",
+            name: "videoFile",
             maxCount: 1,
         },
         {
