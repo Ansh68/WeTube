@@ -1,30 +1,31 @@
-import React, { useEffect, useState, } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { addvideoStats } from '../../store/dashboardSlice';
 import { IoClose } from "react-icons/io5";
 import { BsUpload } from "react-icons/bs";
+import { toast } from 'react-toastify';
 
-// eorros uploading ke time kuch process nahi arha 
-// refresh karne ke baad video dhikri frontpage pe
-//  pubload ke baad automatic band nahi hora popup
+
 
 const modalRoot = document.getElementById("popup-models") || document.body;
 
 
 function VideoForm({ isOpen, onClose, video = null }) {
 
+  const [isUploading, setIsUploading] = React.useState(false);
   const { isAuthenticated } = useSelector((state) => state.auth)
-   const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: {
       title: video?.title ?? "",
       description: video?.description ?? "",
     }
   });
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
 
   const publishVideo = async (data) => {
@@ -38,7 +39,8 @@ function VideoForm({ isOpen, onClose, video = null }) {
     formdata.append("videoFile", data.videoFile[0])
     if (data.thumbnail) formdata.append("thumbnail", data.thumbnail[0]);
     try {
-
+      setIsUploading(true);
+      toast.info("Uploading Video, Please wait...",)
       const response = await axios.post("http://localhost:8000/videos/publish", formdata, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -49,13 +51,18 @@ function VideoForm({ isOpen, onClose, video = null }) {
 
 
         dispatch(addvideoStats(response?.data?.data))
+        toast.success("Video Published Successfully")
+        onClose();
+        navigate("/")
         reset();
-        alert("Video Published Successfully")
+
       }
 
     } catch (error) {
       console.error("Error publishing video:", error);
       alert("Failed to publish video. Please try again.");
+    } finally {
+      setIsUploading(false);
     }
   }
 
@@ -101,6 +108,14 @@ function VideoForm({ isOpen, onClose, video = null }) {
 
   return createPortal(
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/60'>
+      {isUploading && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80">
+          <div className="text-center">
+            <div className="loader mb-2 mx-auto border-4 border-gray-300 border-t-pink-500 rounded-full w-10 h-10 animate-spin"></div>
+            <p className="text-white">Uploading your video</p>
+          </div>
+        </div>
+      )}
       <form onSubmit={handleSubmit(onSubmit)}
         className="w-[90%] max-w-xl rounded border border-gray-700 bg-zinc-950 p-4 text-gray-200"
       >
@@ -190,10 +205,10 @@ function VideoForm({ isOpen, onClose, video = null }) {
           </button>
           <button
             type="submit"
-            disabled={Object.keys(errors).length > 0}
+            disabled={Object.keys(errors).length > 0 || isUploading}
             className="flex-1 border border-gray-600 bg-pink-600 px-4 py-2 font-semibold hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {video ? "Update" : "Publish"}
+            {isUploading ? "Publishing" : (video ? "Update" : "Publish")}
           </button>
         </div>
       </form>

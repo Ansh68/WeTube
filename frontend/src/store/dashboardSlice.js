@@ -6,7 +6,7 @@ const initialState = {
     stats: {
         totalVideos: 0,
         totalViews: 0,
-        
+        totalSubscribers: 0
     },
     loading: false,
 }
@@ -18,6 +18,7 @@ const dashboardSlice = createSlice({
         setVideos: (state, action) => {
             state.videos = action.payload;
         },
+        
         setStats: (state, action) => {
             state.stats = action.payload;
 

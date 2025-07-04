@@ -8,9 +8,9 @@ function PopUp() {
         <>
             <button
                 onClick={() => setShowUploader(true)}
-                className="px-4 py-2 bg-pink-600 text-white rounded"
+                className="px-4 py-2  bg-gray-600 cursor-pointer  text-white rounded"
             >
-                Upload Video
+                Upload
             </button>
 
             {/* Render the modal only when needed */}

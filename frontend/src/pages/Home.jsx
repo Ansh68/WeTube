@@ -3,11 +3,15 @@ import axios from 'axios';
 import VideoCard from "../components/Video/VideoCard";
 import { Loader2 } from 'lucide-react';
 import Navbar from '../components/Navbar/Navbar';
+import { useSelector, useDispatch } from 'react-redux';
+import { setVideos } from '../store/dashboardSlice';
+
 
 function Home() {
-  const [videos, setVideos] = useState([]);
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const videos = useSelector((state) => state.dashboard.videos);
 
   useEffect(() => {
     const fetchVideos = async () => {
@@ -24,7 +28,7 @@ function Home() {
             withCredentials: true,
           }
         );
-        setVideos(response.data.data);
+        dispatch(setVideos(response.data.data));
         console.log("Full video fetch response:", response);
       } catch (error) {
         console.error("Error fetching videos:", error);
@@ -34,7 +38,7 @@ function Home() {
     };
 
     fetchVideos();
-  }, [page]);
+  }, [page, dispatch]);
 
   if (loading) {
     return (

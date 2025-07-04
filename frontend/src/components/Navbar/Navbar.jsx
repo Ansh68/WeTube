@@ -53,9 +53,11 @@ function Navbar() {
 
         <Search />
 
-        <div>
-          <PopUp/>
+        <div className='flex items-center gap-4'>
+
+          <PopUp />
         </div>
+
 
         <div className="flex items-center gap-4" ref={menuref}>
           {!isAuthenticated ? (
@@ -63,13 +65,13 @@ function Navbar() {
               <Link to="/login">
                 <button className="relative overflow-hidden group px-6 py-2.5 text-white font-medium rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg border border-[#2b2b2b]  bg-[#1c1c1c] active:scale-95 cursor-pointer">
                   <span className="relative z-10">Log in</span>
-                 
+
                 </button>
               </Link>
               <Link to="/signup">
                 <button className="relative overflow-hidden group px-6 py-2.5 text-white font-medium rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg border border-[#2b2b2b]  bg-[#3d3d3d] active:scale-95 cursor-pointer">
                   <span className="relative z-10">Sign up</span>
-                 
+
                 </button>
               </Link>
             </>

@@ -22,12 +22,14 @@ import videoRoute from "./routes/videoRoute.js";
 import subscriptionRoute from "./routes/subscriptionRoute.js";
 import commentRoute from "./routes/commentRoute.js";
 import playlistRoute from "./routes/playlistRoute.js";
+import dashboardRoute from "./routes/dashboardRoute.js";
 
 app.use("/users", userRoute);
 app.use("/videos", videoRoute);
 app.use("/subscription", subscriptionRoute);
 app.use("/comments", commentRoute)
 app.use("/playlist", playlistRoute)
+app.use("/dashboard" , dashboardRoute)
 
 
 export {app};
