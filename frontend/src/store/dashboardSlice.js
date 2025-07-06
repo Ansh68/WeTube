@@ -37,9 +37,15 @@ const dashboardSlice = createSlice({
         addvideoStats: (state, action) => {
             state.stats.totalVideos += 1 ;
             state.videos.unshift(action.payload)
+        },
+        updateVideo: (state, action) => {
+            const indx = state.videos.findIndex(video => video._id == action.payload._id);
+            if (indx !== -1) {
+                state.videos[indx] = action.payload
+            }
         }
     }
 })
 
-export const { setVideos, setStats, publishStatus, deleteVideo, addvideoStats } = dashboardSlice.actions;
+export const { setVideos, setStats, publishStatus, deleteVideo, addvideoStats ,updateVideo} = dashboardSlice.actions;
 export default dashboardSlice.reducer;

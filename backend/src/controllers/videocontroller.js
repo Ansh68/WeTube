@@ -4,12 +4,12 @@ import { user } from "../models/usermodel.js";
 import uploadOnCloudinary from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { video } from "../models/videomodel.js";
-import mongoose, { set , isValidObjectId }  from "mongoose";
+import mongoose, { set, isValidObjectId } from "mongoose";
 
 // Include is valid object id for video controller
 
 const getAllVideos = AsyncHandler(async (req, res) => {
- 
+
     const { page = 1, limit = 10, query, sortBy = "createdAt", sortType = "desc", userId } = req.query
 
 
@@ -32,7 +32,7 @@ const getAllVideos = AsyncHandler(async (req, res) => {
     } else if (userId !== undefined && userId !== null && userId !== "" && userId !== "undefined") {
         throw new ApiError(400, "Invalid userId");
     }
-    
+
 
     const Videos = await video.aggregate([
         {
@@ -69,7 +69,7 @@ const getAllVideos = AsyncHandler(async (req, res) => {
             }
         },
         {
-            $skip:  (pageNumber - 1) * limitNumber
+            $skip: (pageNumber - 1) * limitNumber
 
         },
         {
@@ -97,7 +97,7 @@ const getAllVideos = AsyncHandler(async (req, res) => {
     return res
         .status(200)
         .json(
-            new ApiResponse(200, Videos , "Videos fetched successfully"
+            new ApiResponse(200, Videos, "Videos fetched successfully"
             ))
 
 })
@@ -247,7 +247,7 @@ const getVideobyId = AsyncHandler(async (req, res) => {
 const updateVideo = AsyncHandler(async (req, res) => {
     const { videoId } = req.params
 
-    if (!videoId) {
+    if (!videoId || !isValidObjectId(videoId)) {
         throw new ApiError(400, "Invalid video id");
     }
 
@@ -268,16 +268,17 @@ const updateVideo = AsyncHandler(async (req, res) => {
     }
 
     let thumbnailfile = null
-    const thumbnailLocalPath = req.files?.thumbnail[0]?.path
+    const thumbnailLocalPath = req.files?.thumbnail?.[0]?.path
     if (thumbnailLocalPath) {
-        const thumbnailfile = await uploadOnCloudinary(thumbnailLocalPath)
+        thumbnailfile = await uploadOnCloudinary(thumbnailLocalPath)
+
         if (!thumbnailfile) {
             throw new ApiError(400, "Unable to upload thumbnail file");
 
         }
 
         Video.thumbnail = thumbnailfile?.secure_url
-        await Video.save()
+        
     }
 
     const updated = await video.findByIdAndUpdate(
@@ -288,6 +289,9 @@ const updateVideo = AsyncHandler(async (req, res) => {
                 description: description,
                 thumbnail: thumbnailfile?.secure_url || Video.thumbnail
             }
+        },
+        {
+            new: true
         }
     )
 

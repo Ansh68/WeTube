@@ -1,6 +1,6 @@
-import AsyncHandler from "../utils/AsyncHandler";
-import { ApiResponse } from "../utils/ApiResponse";
-import { ApiError } from "../utils/ApiError";
+import AsyncHandler from "../utils/AsyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
 import mongoose, { isValidObjectId } from "mongoose";
 import { video } from "../models/videomodel.js";
 import { subscription } from "../models/subscriptionmodel.js";
@@ -60,7 +60,7 @@ const getChannelStats = AsyncHandler(async (req, res) => {
 const getChannelVideos = AsyncHandler(async (req, res) => {
     const { userId } = req.params
 
-    if (!userId || isValidObjectId(userId)) {
+    if (!userId || !isValidObjectId(userId)) {
         throw new ApiError(400, "Invalid User ID")
     }
 

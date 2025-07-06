@@ -7,6 +7,6 @@ const dashboardRoute = Router()
 dashboardRoute.use(VerifyJWT)
 
 dashboardRoute.route("/stats/:userId").get(getChannelStats)
-dashboardRoute.route("/channelvideos").get(getChannelVideos)
+dashboardRoute.route("/channelvideos/:userId").get(getChannelVideos)
 
 export default dashboardRoute;

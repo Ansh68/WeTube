@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
@@ -8,6 +8,7 @@ import { addvideoStats } from '../../store/dashboardSlice';
 import { IoClose } from "react-icons/io5";
 import { BsUpload } from "react-icons/bs";
 import { toast } from 'react-toastify';
+import { updateVideo } from '../../store/dashboardSlice';
 
 
 
@@ -16,7 +17,8 @@ const modalRoot = document.getElementById("popup-models") || document.body;
 
 function VideoForm({ isOpen, onClose, video = null }) {
 
-  const [isUploading, setIsUploading] = React.useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false)
   const { isAuthenticated } = useSelector((state) => state.auth)
   const { register, handleSubmit, reset, formState: { errors } } = useForm({
     defaultValues: {
@@ -76,7 +78,7 @@ function VideoForm({ isOpen, onClose, video = null }) {
     }
     if (data.thumbnail) formdata.append("thumbnail", data.thumbnail[0]);
     try {
-
+      setIsUpdating(true)
       const response = await axios.patch(`http://localhost:8000/videos/${video?._id}`, formdata, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -85,13 +87,17 @@ function VideoForm({ isOpen, onClose, video = null }) {
       })
 
       if (response?.data?.data) {
-        alert("Video Updated Successfully")
+        dispatch(updateVideo(response.data.data))
+        toast.success("Video Updated Successfully")
         reset();
+        onClose();
       }
 
     } catch (error) {
       console.error("Error updating video:", error);
       alert("Failed to update video. Please try again.");
+    } finally {
+      setIsUpdating(false)
     }
   }
 
@@ -205,10 +211,10 @@ function VideoForm({ isOpen, onClose, video = null }) {
           </button>
           <button
             type="submit"
-            disabled={Object.keys(errors).length > 0 || isUploading}
+            disabled={Object.keys(errors).length > 0 || isUploading || isUpdating}
             className="flex-1 border border-gray-600 bg-pink-600 px-4 py-2 font-semibold hover:bg-pink-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isUploading ? "Publishing" : (video ? "Update" : "Publish")}
+            {isUploading ? "Publishing" : isUpdating ? "Updating" : (video ? "Update" : "Publish")}
           </button>
         </div>
       </form>
