@@ -24,7 +24,7 @@ const Comments = ({ video }) => {
     try {
       setLoading(true);
       const response = await axios.get(`http://localhost:8000/comments/${videoId}?page=${targetPage}&limit=10`);
-      const newComments = response.data.data;
+      const newComments = response.data.data.comments;
 
       setComments((prev) => {
         const updated = targetPage === 1 ? newComments : [...prev, ...newComments];
@@ -39,8 +39,9 @@ const Comments = ({ video }) => {
       } else {
         setPage(targetPage); // Only update after success
       }
+
     } catch (error) {
-      toast.error("Unable to fetch comments");
+      toast.error("Unable to get Comments")
     } finally {
       setLoading(false);
     }
@@ -77,6 +78,7 @@ const Comments = ({ video }) => {
   };
 
   useEffect(() => {
+    if(!videoId) return;
     const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (cached) {
       setComments(JSON.parse(cached));

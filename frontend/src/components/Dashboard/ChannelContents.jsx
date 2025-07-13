@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { setVideos } from '../../store/dashboardSlice'
@@ -58,7 +59,8 @@ function ChannelContents() {
 
 
     return (
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="flex flex-col gap-3">
+            <h1 className='text-2xl pl-4 m-2 font-bold' >Channel Content</h1>
             {videos.map((v) => (
                 <VideoCard key={v._id} video={v} />
             ))}

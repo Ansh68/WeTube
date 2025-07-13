@@ -8,7 +8,7 @@ import { addvideoStats } from '../../store/dashboardSlice';
 import { IoClose } from "react-icons/io5";
 import { BsUpload } from "react-icons/bs";
 import { toast } from 'react-toastify';
-import { updateVideo } from '../../store/dashboardSlice';
+import { updateVideos } from '../../store/dashboardSlice';
 
 
 
@@ -87,7 +87,7 @@ function VideoForm({ isOpen, onClose, video = null }) {
       })
 
       if (response?.data?.data) {
-        dispatch(updateVideo(response.data.data))
+        dispatch(updateVideos(response.data.data))
         toast.success("Video Updated Successfully")
         reset();
         onClose();

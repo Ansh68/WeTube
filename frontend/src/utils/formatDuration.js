@@ -9,7 +9,7 @@ function formatDuration(duration){
         return `${hours}:${pad(minutes)}:${pad(seconds)}`
     }
     else{
-        return ` ${minutes}:${pad(seconds)}`
+        return `${minutes}:${pad(seconds)}`
     }
  }
 
