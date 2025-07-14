@@ -3,6 +3,7 @@ import authReducer from "./authSlice"
 import videoReducer from "./videoSlice"
 import channelReducer from "./channelSlice"
 import dashboardReducer from "./dashboardSlice"
+import playlistsReducer from "./playlistsSlice"
 
 const store =  configureStore({
     reducer: {
@@ -10,6 +11,7 @@ const store =  configureStore({
         video : videoReducer,
         channel : channelReducer,
         dashboard: dashboardReducer,
+        playlists: playlistsReducer,
     }
 });
 

@@ -1,5 +1,5 @@
-import { createSlice, current } from "@reduxjs/toolkit";
-import { act } from "react";
+import { createSlice } from "@reduxjs/toolkit";
+
 
 const initialState = {
     playlists: [],
@@ -55,7 +55,7 @@ const playlistsSlice = createSlice({
     }
 })
 
-export const { setPlaylists, setCurrentPlaylist, addPlaylist, updatePlaylist, deletePlaylist, adddVideoToPlaylist, removeVideoFromPlaylist, setloading, seterror
+export const { setPlaylists, setCurrentPlaylist, addPlaylist, updatePlaylist, deletePlaylist, addVideoToPlaylist, removeVideoFromPlaylist, setloading, seterror
 } = playlistsSlice.actions;
 
 

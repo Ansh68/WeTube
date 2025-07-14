@@ -135,8 +135,8 @@ function SaveVideoPopup({ isOpen, onClose, video }) {
                                         className="sr-only"
                                     />
                                     <div className={`w-5 h-5 border-2 rounded ${selected.includes(playlist._id)
-                                            ? 'bg-blue-600 border-blue-600'
-                                            : 'border-gray-500 group-hover:border-gray-400'
+                                        ? 'bg-blue-600 border-blue-600'
+                                        : 'border-gray-500 group-hover:border-gray-400'
                                         } transition-colors flex items-center justify-center`}>
                                         {selected.includes(playlist._id) && (
                                             <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -152,6 +152,7 @@ function SaveVideoPopup({ isOpen, onClose, video }) {
                     {/* Hidden submit button */}
                     <button type="submit" className="hidden">Save</button>
                 </div>
+
                 {/* New Playlist Button */}
                 <div className="px-4 pb-4">
                     <button
@@ -159,13 +160,14 @@ function SaveVideoPopup({ isOpen, onClose, video }) {
                         className="w-full flex items-center justify-center space-x-2 p-3 bg-gray-800 hover:bg-gray-700 rounded-full transition-colors text-gray-300 hover:text-white"
                     >
                         <Plus size={20} />
-                        {showForm && <PlaylistForm onClose={setShowForm(false)} />}
+                        <span>Create New Playlist</span>
                     </button>
                 </div>
             </div>
+            {showForm && <PlaylistForm isOpen={showForm} onClose={() => setShowForm(false)} />}
         </div>,
         modalRoot
-    )
+    );
 }
 
 export default SaveVideoPopup

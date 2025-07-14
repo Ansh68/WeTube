@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setPlaylists, seterror, setloading } from '../store/playlistsSlice'
 import { toast } from 'react-toastify'
 import axios from 'axios'
@@ -16,7 +16,7 @@ function PlaylistPage() {
         if (!isAuthenticated) {
             return toast.error("You must be logged in to view playlists");
         }
-        setloading(true);
+        dispatch(setloading());
         try {
             const response = await axios.get(`http://localhost:8000/playlist/user/${user._id}`, {
                 headers: {
@@ -32,7 +32,7 @@ function PlaylistPage() {
             dispatch(seterror(error.response?.data?.message || "Unable to fetch playlists"));
             toast.error(error.response?.data?.message || "Unable to fetch playlists");
         } finally {
-            setloading(false);
+            dispatch(setloading(false));
         }
     }
 
@@ -42,17 +42,21 @@ function PlaylistPage() {
 
 
     return (
-        <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-           <h1> YOUR PLAYLISTS </h1>
-           {
-                playlists.length > 0 ? (
+        <div className="p-4">
+            <h1 className="text-2xl font-bold mb-4 text-white">Your Playlists</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {playlists.length > 0 ? (
                     playlists.map((playlist) => (
-                        <PlaylistCard key={playlist._id} playlist={playlist} />
+                        <PlaylistCard
+                            key={playlist._id}
+                            playlist={playlist}
+                            video={playlist.videos?.[0]}
+                        />
                     ))
                 ) : (
-                    <p>No playlists found</p>
-                )
-           }
+                    <p className="text-gray-400">No playlists found</p>
+                )}
+            </div>
         </div>
     )
 }
