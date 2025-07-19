@@ -10,14 +10,14 @@ import { useEffect } from 'react';
 
 const modalRoot = document.getElementById("popup-models") || document.body;
 
-const PlaylistForm = ({ isOpen, onClose, playlist }) => {
+const PlaylistForm = ({ isOpen, onClose, playlist , videoId }) => {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { isAuthenticated } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const { register, handleSubmit, reset, watch } = useForm({
         defaultValues: {
-            title: playlist?.title || '',
+            title: playlist?.name || '',
             description: playlist?.description || ''
         }
     })
@@ -25,14 +25,14 @@ const PlaylistForm = ({ isOpen, onClose, playlist }) => {
     const title = watch("title")
     const description = watch("description")
 
-    const createPlaylist = async () => {
+    const createPlaylist = async (data) => {
         if (!isAuthenticated) {
             return toast.error("You must be logged in to create a playlist");
         }
         setIsSubmitting(true);
         dispatch(setloading());
         try {
-            const response = await axios.post("http://localhost:8000/playlist", {}, {
+            const response = await axios.post("http://localhost:8000/playlist", data , {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`
                 },
@@ -41,6 +41,7 @@ const PlaylistForm = ({ isOpen, onClose, playlist }) => {
             if (response?.data?.data) {
                 dispatch(addPlaylist(response.data.data))
                 toast.success("Playlist created successfully");
+                onClose();
             }
         } catch (error) {
             setIsSubmitting(false);
@@ -80,11 +81,21 @@ const PlaylistForm = ({ isOpen, onClose, playlist }) => {
     }
 
     const onSubmit = (data) => {
+        const payload  = {
+            name: data.title.trim(),
+            description: data.description.trim() || ""
+        }
+
+        if (videoId) {
+            payload.videoId = videoId;
+        }
+
+
         if (playlist) {
-            handleUpdate(data);
+            handleUpdate(payload);
         }
         else {
-            createPlaylist(data);
+            createPlaylist(payload);
         }
     }
 

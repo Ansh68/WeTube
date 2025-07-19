@@ -42,8 +42,9 @@ function PlaylistPage() {
 
 
     return (
-        <div className="p-4">
-            <h1 className="text-2xl font-bold mb-4 text-white">Your Playlists</h1>
+        
+        <div className="p-4 bg-black min-h-screen">
+            <h1 className="text-2xl font-bold mb-4 flex justify-center text-white">Your Playlists</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {playlists.length > 0 ? (
                     playlists.map((playlist) => (
@@ -54,7 +55,7 @@ function PlaylistPage() {
                         />
                     ))
                 ) : (
-                    <p className="text-gray-400">No playlists found</p>
+                    <p className="text-gray-400 ">No playlists found</p>
                 )}
             </div>
         </div>

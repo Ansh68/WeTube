@@ -32,6 +32,11 @@ function SaveVideoPopup({ isOpen, onClose, video }) {
                 })
                 if (response?.data?.data) {
                     dispatch(setPlaylists(response.data.data));
+                    const preSelected = response.data.data
+                        .filter(pl => pl.videos?.some(v => v._id === videoId))
+                        .map(pl => pl._id);
+
+                    setSelected(preSelected);
 
                 }
             } catch (error) {
@@ -47,14 +52,16 @@ function SaveVideoPopup({ isOpen, onClose, video }) {
         }
         dispatch(setloading());
         try {
-            const response = await axios.post(`http://localhost:8000/playlist/${playlistId}/video/${videoId}`, {}, {
+            const response = await axios.patch(`http://localhost:8000/playlist/add/${videoId}/${playlistId}`, {}, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
                 withCredentials: true,
             })
             if (response.data.data) {
-                dispatch(addVideoToPlaylist({ playlistId, video: response.data.data }))
+
+                dispatch(addVideoToPlaylist(response.data.data))
+                console.log("📥 Response from add API:", response.data.data);
                 toast.success("Video added to playlist successfully");
                 onClose();
                 setSelected((prev) => [...prev, playlistId])
@@ -71,7 +78,7 @@ function SaveVideoPopup({ isOpen, onClose, video }) {
         }
         dispatch(setloading());
         try {
-            const response = await axios.delete(` http://localhost:8000/playlist/${playlistId}/video/${videoId}`, {
+            const response = await axios.patch(`http://localhost:8000/playlist/remove/${videoId}/${playlistId}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
@@ -100,7 +107,13 @@ function SaveVideoPopup({ isOpen, onClose, video }) {
 
     useEffect(() => {
         getUserPlaylists();
-    }, [isOpen, isAuthenticated, user?._id, dispatch]);
+    }, [isOpen, isAuthenticated, user?._id]);
+
+    useEffect(() => {
+        if (!showForm) {
+            getUserPlaylists();
+        }
+    }, [showForm]);
 
     if (!isOpen) return null;
 
@@ -145,7 +158,7 @@ function SaveVideoPopup({ isOpen, onClose, video }) {
                                         )}
                                     </div>
                                 </div>
-                                <span className="text-white text-sm flex-1">{playlist.title}</span>
+                                <span className="text-white text-sm flex-1">{playlist.name}</span>
                             </label>
                         ))}
                     </div>
@@ -164,7 +177,11 @@ function SaveVideoPopup({ isOpen, onClose, video }) {
                     </button>
                 </div>
             </div>
-            {showForm && <PlaylistForm isOpen={showForm} onClose={() => setShowForm(false)} />}
+            {showForm && <PlaylistForm
+                isOpen={showForm}
+                onClose={() => setShowForm(false)}
+                videoId={videoId}
+            />}
         </div>,
         modalRoot
     );

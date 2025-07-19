@@ -18,6 +18,7 @@ const playlistsSlice = createSlice({
         },
         setCurrentPlaylist: (state, action) => {
             state.currentPlaylist = action.payload;
+            state.loading = false;
         },
         addPlaylist: (state, action) => {
             state.playlists.push(action.payload)
@@ -31,10 +32,10 @@ const playlistsSlice = createSlice({
             state.playlists = state.playlists.filter(playlist => playlist._id !== action.payload)
         },
         addVideoToPlaylist: (state, action) => {
-            const { playlistId, video } = action.payload;
-            const playlist = state.playlists.find(pl => pl._id === playlistId)
-            if (playlist && !playlist.videos.some(v => v._id === video._id)) {
-                playlist.videos.push(video);
+            const updatedPlaylist = action.payload;
+            const index = state.playlists.findIndex(pl => pl._id === updatedPlaylist._id);
+            if (index !== -1) {
+                state.playlists[index] = updatedPlaylist;
             }
         },
         removeVideoFromPlaylist: (state, action) => {
@@ -49,8 +50,8 @@ const playlistsSlice = createSlice({
             state.error = null;
         },
         seterror: (state, action) => {
-            state.loading = false;
             state.error = action.payload;
+            state.loading = false;
         },
     }
 })

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useDispatch ,useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setCurrentPlaylist, seterror, setloading } from '../store/playlistsSlice'
 import { toast } from 'react-toastify'
 import axios from 'axios'
@@ -9,7 +9,7 @@ import VideoListCard from '../components/Video/VideoListCard'
 
 function PlaylistDetailPage() {
     const { isAuthenticated } = useSelector((state) => state.auth);
-    const { currentPlaylist } = useSelector((state) => state.playlists);
+    const { loading, currentPlaylist } = useSelector((state) => state.playlists);
     const dispatch = useDispatch();
     const { playlistId } = useParams();
 
@@ -38,18 +38,28 @@ function PlaylistDetailPage() {
         fetchPlaylist();
     }, [isAuthenticated, playlistId]);
 
+
+    if (!currentPlaylist && loading) {
+        return <div className="p-4 text-xl text-white">Loading playlist...</div>;
+    }
+
     return (
-        <div className="p-4 text-white">
-            <h2 className="text-2xl font-bold mb-4">{currentPlaylist?.title || "loading..."} </h2>
-            <div className="space-y-3">
-                {currentPlaylist.videos && currentPlaylist.videos.length > 0 ? (
-                    currentPlaylist.videos.map((video) => (
-                        <VideoListCard key={video._id} video={video} />
-                    ))
-                ) : (
-                    <p className="text-gray-400">No videos in this playlist</p>
-                )}
-            </div>
+        <div className="p-4 text-white bg-black min-h-screen">
+            {loading ? (
+                <div className="p-4 text-xl text-white">Loading playlist...</div>
+            ) : (
+
+                <div className="space-y-3">
+                    <h2 className="text-3xl flex justify-center font-bold mb-4">{currentPlaylist?.name || "loading..."} </h2>
+                    {currentPlaylist?.videos && currentPlaylist.videos.length > 0 ? (
+                        currentPlaylist.videos.map((video) => (
+                            <VideoListCard key={video._id} video={video} />
+                        ))
+                    ) : (
+                        <p className="text-gray-400">No videos in this playlist</p>
+                    )}
+                </div>
+            )}
         </div>
     )
 }

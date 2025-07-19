@@ -11,6 +11,8 @@ import History from './pages/History'
 import Dashboard from './pages/Dashboard'
 import ChannelStats from './components/Dashboard/ChannelStats'
 import ChannelContents from './components/Dashboard/ChannelContents'
+import PlaylistPage from './pages/PlaylistPage';
+import PlaylistDetailPage from './pages/PlaylistDetailPage';
 
 function App() {
 
@@ -30,6 +32,8 @@ function App() {
           <Route path='stats' element={<ChannelStats />} />
           <Route path='content' element={<ChannelContents />} />
         </Route>
+        <Route path='/playlist' element={<PlaylistPage/>} />
+        <Route path='/playlist/:playlistId' element={<PlaylistDetailPage />} />
       </Routes>
     </BrowserRouter>
 
