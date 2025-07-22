@@ -80,15 +80,17 @@ function VideoInfo() {
             </Link>
           </div>
 
-          <button
-            onClick={handleSubscribe}
-            className={`px-4 py-2 rounded-full font-medium ${video?.owner?.isSubscribed
-              ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
-              : "bg-red-600 hover:bg-red-700"
-              }`}
-          >
-            {video?.owner?.isSubscribed ? "Subscribed" : "Subscribe"}
-          </button>
+          {user?._id !== video?.owner?._id && (
+            <button
+              onClick={handleSubscribe}
+              className={`px-4 py-2 rounded-full font-medium ${video?.owner?.isSubscribed
+                  ? "bg-gray-800 text-gray-200 hover:bg-gray-700"
+                  : "bg-red-600 hover:bg-red-700"
+                }`}
+            >
+              {video?.owner?.isSubscribed ? "Subscribed" : "Subscribe"}
+            </button>
+          )}
         </div>
 
         <div className="bg-gray-900 rounded-xl p-4">

@@ -102,6 +102,92 @@ const getAllVideos = AsyncHandler(async (req, res) => {
 
 })
 
+const getUserVideos = AsyncHandler(async (req, res) => {
+    const { page = 1, limit = 10, sortType = "desc" } = req.query;
+    const { userId } = req.params;
+
+    if (!userId || !isValidObjectId(userId)) {
+        throw new ApiError(400, "Invalid user id");
+    }
+
+    const userVideos = await video.aggregate([
+        {
+            $match: {
+                owner: new mongoose.Types.ObjectId(userId),
+                ispublished: true
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            fullname: 1,
+                            avatar: 1,
+                            username: 1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $lookup: {
+                from: "comments",
+                localField: "_id",
+                foreignField: "video",
+                as: "comments",
+            }
+        },
+        {
+            $addFields: {
+                owner: {
+                    $first: "$owner"
+                }
+            }
+        },
+        {
+            $sort: {
+                createdAt: sortType === "asc" ? 1 : -1
+            }
+        },
+        {
+            $skip: (page - 1) * limit
+        },
+        {
+            $limit: parseInt(limit)
+        },
+        {
+            $project: {
+                _id: 1,
+                title: 1,
+                description: 1,
+                videoFile: 1,
+                thumbnail: 1,
+                duration: 1,
+                views: 1,
+                createdAt: 1,
+                owner: 1,
+                comments: {
+                    $size: "$comments"
+                }
+            }
+        }
+    ])
+
+    if (!userVideos?.length){
+        throw new ApiError(404, "No videos found for this user");
+    }
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, userVideos, "User videos fetched successfully"))
+})
+
+
 const publishVideo = AsyncHandler(async (req, res) => {
     const { title, description } = req.body;
 
@@ -278,7 +364,7 @@ const updateVideo = AsyncHandler(async (req, res) => {
         }
 
         Video.thumbnail = thumbnailfile?.secure_url
-        
+
     }
 
     const updated = await video.findByIdAndUpdate(
@@ -343,4 +429,4 @@ const deleteVideo = AsyncHandler(async (req, res) => {
 })
 
 
-export { publishVideo, getVideobyId, updateVideo, deleteVideo, getAllVideos }
+export { publishVideo, getVideobyId, updateVideo, deleteVideo, getAllVideos, getUserVideos }

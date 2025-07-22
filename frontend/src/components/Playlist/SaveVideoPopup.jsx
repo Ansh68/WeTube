@@ -78,7 +78,7 @@ function SaveVideoPopup({ isOpen, onClose, video }) {
         }
         dispatch(setloading());
         try {
-            const response = await axios.patch(`http://localhost:8000/playlist/remove/${videoId}/${playlistId}`, {
+            const response = await axios.patch(`http://localhost:8000/playlist/remove/${videoId}/${playlistId}`, {}, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },

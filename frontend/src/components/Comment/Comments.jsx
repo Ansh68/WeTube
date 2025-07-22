@@ -6,42 +6,47 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useParams, useLocation } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Loader2, Send } from 'lucide-react';
+import { Send } from 'lucide-react';
 
 const Comments = ({ video }) => {
   const { videoId } = useParams();
   const [comments, setComments] = useState([]);
   const { register, handleSubmit, reset } = useForm();
-  const { isAuthenticated, data: { user } } = useSelector((state) => state.auth);
+  const {
+    isAuthenticated,
+    data: { user },
+  } = useSelector((state) => state.auth);
   const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [hasmore, setHasmore] = useState(true);
   const [page, setPage] = useState(1);
 
-  const LOCAL_STORAGE_KEY = `comments-${videoId}`;
-
   const fetchComments = async (targetPage = 1) => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:8000/comments/${videoId}?page=${targetPage}&limit=10`);
+      const response = await axios.get(
+        `http://localhost:8000/comments/${videoId}?page=${targetPage}&limit=10`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+          withCredentials: true,
+        }
+      );
+
       const newComments = response.data.data.comments;
 
-      setComments((prev) => {
-        const updated = targetPage === 1 ? newComments : [...prev, ...newComments];
-
-       
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
-        return updated;
-      });
+      setComments((prev) =>
+        targetPage === 1 ? newComments : [...prev, ...newComments]
+      );
 
       if (newComments.length < 10) {
         setHasmore(false);
       } else {
-        setPage(targetPage); // Only update after success
+        setPage(targetPage);
       }
-
     } catch (error) {
-      toast.error("Unable to get Comments")
+      console.error("Fetch Comments Error:", error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
@@ -63,13 +68,9 @@ const Comments = ({ video }) => {
           withCredentials: true,
         }
       );
+
       const newComment = response.data.data;
-      const updated = [newComment, ...comments];
-      setComments(updated);
-
-     
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
-
+      setComments((prev) => [newComment, ...prev]);
       toast.success("Comment posted successfully");
       reset();
     } catch (error) {
@@ -78,11 +79,7 @@ const Comments = ({ video }) => {
   };
 
   useEffect(() => {
-    if(!videoId) return;
-    const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (cached) {
-      setComments(JSON.parse(cached));
-    }
+    if (!videoId) return;
     setHasmore(true);
     setPage(1);
     fetchComments(1);
@@ -93,13 +90,11 @@ const Comments = ({ video }) => {
       c._id === id ? { ...c, ...updated } : c
     );
     setComments(updatedComments);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedComments)); 
   };
 
   const deleteCommentInState = (id) => {
     const updatedComments = comments.filter((c) => c._id !== id);
     setComments(updatedComments);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedComments)); 
   };
 
   return (
@@ -108,7 +103,10 @@ const Comments = ({ video }) => {
         <p className="text-lg font-medium text-white">
           {comments.length ? `${comments.length} Comments` : "No Comments"}
         </p>
-        <form onSubmit={handleSubmit(handleSubmitComment)} className="flex items-center space-x-4">
+        <form
+          onSubmit={handleSubmit(handleSubmitComment)}
+          className="flex items-center space-x-4"
+        >
           <img
             src={user?.avatar || video?.owner?.avatar}
             alt="avatar"

@@ -95,7 +95,7 @@ const getPlaylistById = AsyncHandler(async (req, res) => {
         path: "videos",
         populate: {
             path: "owner",
-            select: "avatar username fullName"
+            select: "avatar username fullname"
         }
     })
 

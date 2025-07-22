@@ -141,7 +141,7 @@ function VideoCard({ video, name = true }) {
               className="text-gray-400 text-xs hover:text-white cursor-pointer"
               onClick={handleChannelClick}
             >
-              {video?.owner?.fullName}
+              {video?.owner?.fullname}
             </h3>
           )}
           <p className="text-gray-400 text-xs mt-0.5">
