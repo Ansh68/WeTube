@@ -13,6 +13,7 @@ import ChannelStats from './components/Dashboard/ChannelStats'
 import ChannelContents from './components/Dashboard/ChannelContents'
 import PlaylistPage from './pages/PlaylistPage';
 import PlaylistDetailPage from './pages/PlaylistDetailPage';
+import ChannelVideos from './components/Channel/ChannelVideos'
 
 function App() {
 
@@ -25,7 +26,9 @@ function App() {
         <Route path='/' element={<Home />} ></Route>
         <Route path='/Login' element={<Login />} ></Route>
         <Route path='/watchpage/:videoId' element={<Video />} ></Route>
-        <Route path='/channel/:username' element={<ChannelPage />}> </Route>
+        <Route path='/channel/:username' element={<ChannelPage />}> 
+          <Route path='videos' element={<ChannelVideos />} />
+        </Route>
         <Route path='/history' element={<History />} ></Route>
         <Route path='/dashboard' element={<Dashboard />}>
           <Route index element={<ChannelStats />} />

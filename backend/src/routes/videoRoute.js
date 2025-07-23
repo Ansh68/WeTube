@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { deleteVideo, getAllVideos, getVideobyId, publishVideo, updateVideo } from '../controllers/videocontroller.js';
+import { deleteVideo, getAllVideos, getVideobyId, publishVideo, updateVideo , getUserVideos} from '../controllers/videocontroller.js';
 import { upload } from '../middlewares/multer.js';
 import { VerifyJWT } from '../middlewares/Auth.js';
 import { get } from 'mongoose';
@@ -27,6 +27,8 @@ videoRoute.route("/publish").post(VerifyJWT, upload.fields(
 
 )
 
+videoRoute.route("/c/:userId").get(VerifyJWT, getUserVideos);
+
 videoRoute.route("/:videoId")
     .get(VerifyJWT, getVideobyId)
     .patch(VerifyJWT, upload.fields(
@@ -38,7 +40,6 @@ videoRoute.route("/:videoId")
         ]
     ), updateVideo)
     .delete(VerifyJWT, deleteVideo)
-
 
 
 
