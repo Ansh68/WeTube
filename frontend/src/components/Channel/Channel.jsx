@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setUserChannel , toggleSubscription } from "../../store/channelSlice"
 import axios from 'axios'
 import { useParams, NavLink,  useNavigate, Outlet } from 'react-router-dom'
-import ChannelVideos from './ChannelVideos'
-import VideoCard from '../Video/VideoCard'
+
 
 function Channel() {
   const dispatch = useDispatch()
@@ -48,6 +47,7 @@ function Channel() {
           withCredentials: true,
         }
       })
+      
       if (response.data.success) {
         dispatch(toggleSubscription({
           profileId: Profile._id,
