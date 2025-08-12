@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+
+
+
+/* index.css or any global CSS file */
+::-webkit-scrollbar {
+    width: 6px;
+    /* YouTube-like thin scrollbar */
+    height: 6px;
+}
+
+
+
+::-webkit-scrollbar-track {
+    background: transparent;
+    /* Transparent track like YouTube */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Subtle grey */
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+    /* Slightly lighter on hover */
+}

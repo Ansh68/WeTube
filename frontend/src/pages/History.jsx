@@ -53,7 +53,7 @@ function History() {
     return (
         <>
             <div className='bg-black min-h-screen text-gray-100'>
-                <Navbar />
+                
                 {loading && (
                     <span>Loading...</span>
                 )}

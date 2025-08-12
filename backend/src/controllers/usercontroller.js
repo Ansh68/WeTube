@@ -23,7 +23,7 @@ const generateTokens = async (userid) => {
     }
 }
 
-const registerUser = AsyncHandler(async (req, res, next) => {
+const registerUser = AsyncHandler(async (req, res) => {
 
     // get user details form frontend
     const { fullname, username, email, password } = req.body;
@@ -87,7 +87,7 @@ const registerUser = AsyncHandler(async (req, res, next) => {
     )
 })
 
-const loginUser = AsyncHandler(async (req, res) => {
+const loginUser = AsyncHandler(async (req, res) => { 
 
     // get req data
     const { email, password } = req.body;
@@ -118,7 +118,7 @@ const loginUser = AsyncHandler(async (req, res) => {
 
     const options = {
         httpOnly: true,
-        secure: false
+        secure: true
     }
 
     // send cookies and response
@@ -181,7 +181,7 @@ const refreshAccessToken = AsyncHandler(async (req, res) => {
         throw new ApiError(401, "Invalid Refresh Token")
     }
 
-    if (incomingrefreshToken !== User?.refreshToken) {
+    if (incomingrefreshToken !== User?.refreshToken) {  
         throw new ApiError(401, "Invalid Refresh Token")
     }
 

@@ -9,7 +9,7 @@ import PopUp from '../Dashboard/PopUp';
 
 function Navbar() {
   const user = useSelector((state) => state.auth.data.user);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const dispatch = useDispatch();
@@ -46,10 +46,10 @@ function Navbar() {
 
 
   return (
-    <div className="sticky top-0 z-50 bg-black">
-      <nav className="flex justify-between items-center p-4">
+    <div>
+      <nav  className="flex items-center justify-between px-4 py-3  sticky top-0 z-50 bg-black">
         {/* Logo placeholder or title */}
-        <Link to="/" className="text-white font-bold text-xl">MyApp</Link>
+        <Link to="/" className="text-white font-bold text-xl mr-4">MyApp</Link>
 
         <Search />
 
@@ -116,9 +116,6 @@ function Navbar() {
               </div>
             </div>
           )}
-
-
-
         </div>
       </nav>
     </div>

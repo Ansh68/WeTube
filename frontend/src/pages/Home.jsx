@@ -50,7 +50,7 @@ function Home() {
 
   return (
     <>
-      <Navbar />
+    
       <div className="bg-black min-h-screen pb-10">
         <div className="container mx-auto px-4 pt-5 overflow-visible">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-visible">
